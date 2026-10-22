@@ -35,18 +35,26 @@
             >
                 <TextField
                     label="Username"
-                    name="name"
+                    name="username"
                     autocomplete="username"
                     placeholder="Create a username..."
                     required
-                    error={errors.name}
+                    error={errors.username}
+                />
+                <TextField
+                    label="Full name"
+                    name="full_name"
+                    autocomplete="name"
+                    placeholder="Enter your full name..."
+                    required
+                    error={errors.full_name}
                 />
                 <TextField
                     label="Email"
                     name="email"
                     type="email"
                     autocomplete="email"
-                    placeholder="you@example.com"
+                    placeholder="Enter your email..."
                     required
                     error={errors.email}
                 />
@@ -55,6 +63,7 @@
                     name="password"
                     type="password"
                     autocomplete="new-password"
+                    placeholder="Create a password..."
                     required
                     error={errors.password}
                 />
@@ -63,6 +72,7 @@
                     name="password_confirmation"
                     type="password"
                     autocomplete="new-password"
+                    placeholder="Confirm your password..."
                     required
                     error={errors.password_confirmation}
                 />

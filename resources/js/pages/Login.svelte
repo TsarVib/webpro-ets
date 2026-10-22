@@ -37,7 +37,7 @@
                     label="Email or username"
                     name="login"
                     autocomplete="username"
-                    placeholder="you@example.com"
+                    placeholder="Enter your email or username..."
                     required
                     error={errors.login}
                 />
@@ -46,6 +46,7 @@
                     name="password"
                     type="password"
                     autocomplete="current-password"
+                    placeholder="Enter your password..."
                     required
                     error={errors.password}
                 />
