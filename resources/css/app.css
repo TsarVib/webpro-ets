@@ -3,9 +3,65 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+    --background: #eff1f5;
+    --surface: #e6e9ef;
+    --ink: #4c4f69;
+    --muted: #5c5f77;
+    --border: #bcc0cc;
+    --primary: #327e20;
+    --primary-hover: #2a6919;
+    --primary-ink: #eff1f5;
+    --accent: #fe640b;
+    --ring: #327e20;
+    --error: #d20f39;
+}
+
+.dark {
+    --background: #1e1e2e;
+    --surface: #181825;
+    --ink: #cdd6f4;
+    --muted: #bac2de;
+    --border: #45475a;
+    --primary: #a6e3a1;
+    --primary-hover: #b1e9ad;
+    --primary-ink: #11111b;
+    --accent: #fab387;
+    --ring: #a6e3a1;
+    --error: #f38ba8;
+}
+
+:root {
+    color-scheme: light;
+}
+
+.dark {
+    color-scheme: dark;
+}
+
 @theme inline {
+    --color-background: var(--background);
+    --color-surface: var(--surface);
+    --color-ink: var(--ink);
+    --color-muted: var(--muted);
+    --color-border: var(--border);
+    --color-primary: var(--primary);
+    --color-primary-hover: var(--primary-hover);
+    --color-primary-ink: var(--primary-ink);
+    --color-accent: var(--accent);
+    --color-ring: var(--ring);
+    --color-error: var(--error);
+
     --font-sans:
         Instrument Sans, ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
+}
+
+@layer base {
+    body {
+        @apply bg-background font-sans text-ink antialiased;
+    }
 }
