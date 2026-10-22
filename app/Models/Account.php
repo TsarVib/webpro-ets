@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Models;
+
+use Database\Factories\AccountFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+#[Fillable(['username', 'full_name', 'email', 'password_hash'])]
+#[Hidden(['password_hash'])]
+class Account extends Authenticatable
+{
+    /** @use HasFactory<AccountFactory> */
+    use HasFactory;
+
+    protected $table = 'accounts';
+
+    public function getAuthPasswordName(): string
+    {
+        return 'password_hash';
+    }
+
+    public function getAuthPassword(): string
+    {
+        return $this->password_hash;
+    }
+}

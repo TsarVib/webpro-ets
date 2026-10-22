@@ -5,13 +5,13 @@
     import ThemeToggle from "@/components/ThemeToggle.svelte";
     import { Form } from "@inertiajs/svelte";
     import { login } from "@/routes";
+    import { create } from "@/routes/register";
 </script>
 
 <AppHead title="Register" />
 
 <Form
-    action="/register"
-    method="post"
+    {...create.form()}
     resetOnSuccess={false}
     class="relative flex min-h-dvh items-center justify-center px-4 py-8"
 >

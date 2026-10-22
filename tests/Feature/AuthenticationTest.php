@@ -1,7 +1,10 @@
 <?php
 
-use App\Models\User;
+use App\Models\Account;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Cookie;
 
 uses(RefreshDatabase::class);
 
@@ -15,28 +18,34 @@ test('guests can reach the login and register pages', function () {
 });
 
 test('authenticated users are redirected away from guest pages', function () {
-    $user = User::factory()->create();
+    $account = Account::factory()->create();
 
-    $this->actingAs($user)->get('/login')->assertRedirect(route('home'));
-    $this->actingAs($user)->get('/register')->assertRedirect(route('home'));
+    $this->actingAs($account)->get('/login')->assertRedirect(route('home'));
+    $this->actingAs($account)->get('/register')->assertRedirect(route('home'));
 });
 
-test('registration creates the user, logs them in, and redirects home', function () {
+test('registration creates an account without logging in and redirects to login', function () {
     $this->post('/register', [
-        'name' => 'tsar',
+        'username' => 'tsar',
+        'full_name' => 'Tsar User',
         'email' => 'tsar@example.com',
         'password' => 'Sp1ce-R0ute-Long!',
         'password_confirmation' => 'Sp1ce-R0ute-Long!',
-    ])->assertRedirect(route('home'));
+    ])->assertRedirect(route('login'));
 
-    $this->assertAuthenticated();
-    $this->assertDatabaseHas('users', ['email' => 'tsar@example.com']);
-    $this->get('/')->assertOk();
+    $this->assertGuest();
+    $this->assertDatabaseHas('accounts', [
+        'username' => 'tsar',
+        'full_name' => 'Tsar User',
+        'email' => 'tsar@example.com',
+    ]);
+    expect(Hash::check('Sp1ce-R0ute-Long!', Account::query()->firstOrFail()->password_hash))->toBeTrue();
 });
 
 test('registration rejects mismatched password confirmation', function () {
     $this->post('/register', [
-        'name' => 'tsar',
+        'username' => 'tsar',
+        'full_name' => 'Tsar User',
         'email' => 'tsar@example.com',
         'password' => 'Sp1ce-R0ute-Long!',
         'password_confirmation' => 'different',
@@ -46,14 +55,15 @@ test('registration rejects mismatched password confirmation', function () {
 });
 
 test('login accepts email or username and errors on bad credentials', function () {
-    $user = User::factory()->create([
-        'name' => 'tsar',
+    $account = Account::factory()->create([
+        'username' => 'tsar',
         'email' => 'tsar@example.com',
     ]);
 
     $this->post('/login', ['login' => 'tsar@example.com', 'password' => 'password'])
         ->assertRedirect(route('home'));
     $this->assertAuthenticated();
+    expect($account->refresh()->last_login)->not->toBeNull();
 
     Auth::logout();
 
@@ -68,9 +78,22 @@ test('login accepts email or username and errors on bad credentials', function (
     $this->assertGuest();
 });
 
-test('logout destroys the session', function () {
-    $user = User::factory()->create();
+test('login can remember an account', function () {
+    $account = Account::factory()->create();
 
-    $this->actingAs($user)->post('/logout')->assertRedirect(route('login'));
+    $response = $this->post('/login', [
+        'login' => $account->email,
+        'password' => 'password',
+        'remember' => '1',
+    ])->assertRedirect(route('home'));
+
+    expect($account->refresh()->remember_token)->not->toBeNull();
+    expect(collect($response->headers->getCookies())->contains(
+        fn (Cookie $cookie): bool => str_starts_with($cookie->getName(), 'remember_')
+    ))->toBeTrue();
+});
+
+test('logout destroys the session', function () {
+    $this->actingAs(Account::factory()->create())->post('/logout')->assertRedirect(route('login'));
     $this->assertGuest();
 });

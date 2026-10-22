@@ -5,13 +5,13 @@
     import ThemeToggle from "@/components/ThemeToggle.svelte";
     import { Form } from "@inertiajs/svelte";
     import { register } from "@/routes";
+    import { authenticate } from "@/routes/login";
 </script>
 
 <AppHead title="Log in" />
 
 <Form
-    action="/login"
-    method="post"
+    {...authenticate.form()}
     resetOnSuccess={false}
     class="relative flex min-h-dvh items-center justify-center px-4 py-8"
 >
@@ -50,6 +50,15 @@
                     required
                     error={errors.password}
                 />
+                <label class="flex items-center gap-2 text-sm text-muted">
+                    <input
+                        type="checkbox"
+                        name="remember"
+                        value="1"
+                        class="size-4 rounded border-border text-primary focus:ring-2 focus:ring-ring"
+                    />
+                    Remember me
+                </label>
 
                 <Button type="submit" loading={processing}>
                     {processing ? "Logging in..." : "Log in"}
