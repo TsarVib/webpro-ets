@@ -16,6 +16,12 @@
             if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
             }
+
+            var accent = localStorage.getItem('accent');
+
+            if (accent) {
+                document.documentElement.dataset.accent = accent;
+            }
         </script>
 
         @vite(['resources/css/app.css', 'resources/js/app.ts'])

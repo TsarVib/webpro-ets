@@ -11,11 +11,11 @@
     --ink: #4c4f69;
     --muted: #5c5f77;
     --border: #bcc0cc;
-    --primary: #327e20;
-    --primary-hover: #2a6919;
-    --primary-ink: #eff1f5;
+    --primary: #40a02b;
+    --primary-hover: #358524;
+    --primary-ink: #11111b;
     --accent: #fe640b;
-    --ring: #327e20;
+    --ring: #40a02b;
     --error: #d20f39;
 }
 
@@ -26,11 +26,241 @@
     --muted: #bac2de;
     --border: #45475a;
     --primary: #a6e3a1;
-    --primary-hover: #b1e9ad;
+    --primary-hover: #90d18a;
     --primary-ink: #11111b;
     --accent: #fab387;
     --ring: #a6e3a1;
     --error: #f38ba8;
+}
+
+:root {
+    --swatch-rosewater: #dc8a78;
+    --swatch-flamingo: #dd7878;
+    --swatch-pink: #ea76cb;
+    --swatch-mauve: #8839ef;
+    --swatch-red: #d20f39;
+    --swatch-maroon: #e64553;
+    --swatch-peach: #fe640b;
+    --swatch-yellow: #df8e1d;
+    --swatch-green: #40a02b;
+    --swatch-teal: #179299;
+    --swatch-sky: #04a5e5;
+    --swatch-sapphire: #209fb5;
+    --swatch-blue: #1e66f5;
+    --swatch-lavender: #7287fd;
+}
+
+.dark {
+    --swatch-rosewater: #f5e0dc;
+    --swatch-flamingo: #f2cdcd;
+    --swatch-pink: #f5c2e7;
+    --swatch-mauve: #cba6f7;
+    --swatch-red: #f38ba8;
+    --swatch-maroon: #eba0ac;
+    --swatch-peach: #fab387;
+    --swatch-yellow: #f9e2af;
+    --swatch-green: #a6e3a1;
+    --swatch-teal: #94e2d5;
+    --swatch-sky: #89dceb;
+    --swatch-sapphire: #74c7ec;
+    --swatch-blue: #89b4fa;
+    --swatch-lavender: #b4befe;
+}
+
+[data-accent='rosewater'] {
+    --primary: #dc8a78;
+    --primary-hover: #c97d6c;
+    --primary-ink: #11111b;
+    --ring: #dc8a78;
+}
+
+.dark[data-accent='rosewater'] {
+    --primary: #f5e0dc;
+    --primary-hover: #e8cfc9;
+    --primary-ink: #11111b;
+    --ring: #f5e0dc;
+}
+
+[data-accent='flamingo'] {
+    --primary: #dd7878;
+    --primary-hover: #ca6b6b;
+    --primary-ink: #11111b;
+    --ring: #dd7878;
+}
+
+.dark[data-accent='flamingo'] {
+    --primary: #f2cdcd;
+    --primary-hover: #e3b6b6;
+    --primary-ink: #11111b;
+    --ring: #f2cdcd;
+}
+
+[data-accent='pink'] {
+    --primary: #ea76cb;
+    --primary-hover: #d95fba;
+    --primary-ink: #11111b;
+    --ring: #ea76cb;
+}
+
+.dark[data-accent='pink'] {
+    --primary: #f5c2e7;
+    --primary-hover: #eba6db;
+    --primary-ink: #11111b;
+    --ring: #f5c2e7;
+}
+
+[data-accent='mauve'] {
+    --primary: #8839ef;
+    --primary-hover: #7730d0;
+    --primary-ink: #eff1f5;
+    --ring: #8839ef;
+}
+
+.dark[data-accent='mauve'] {
+    --primary: #cba6f7;
+    --primary-hover: #b98df5;
+    --primary-ink: #11111b;
+    --ring: #cba6f7;
+}
+
+[data-accent='red'] {
+    --primary: #d20f39;
+    --primary-hover: #b00c30;
+    --primary-ink: #eff1f5;
+    --ring: #d20f39;
+}
+
+.dark[data-accent='red'] {
+    --primary: #f38ba8;
+    --primary-hover: #e57492;
+    --primary-ink: #11111b;
+    --ring: #f38ba8;
+}
+
+[data-accent='maroon'] {
+    --primary: #e64553;
+    --primary-hover: #cf3542;
+    --primary-ink: #11111b;
+    --ring: #e64553;
+}
+
+.dark[data-accent='maroon'] {
+    --primary: #eba0ac;
+    --primary-hover: #dd8896;
+    --primary-ink: #11111b;
+    --ring: #eba0ac;
+}
+
+[data-accent='peach'] {
+    --primary: #fe640b;
+    --primary-hover: #e25607;
+    --primary-ink: #11111b;
+    --ring: #fe640b;
+}
+
+.dark[data-accent='peach'] {
+    --primary: #fab387;
+    --primary-hover: #f29d6c;
+    --primary-ink: #11111b;
+    --ring: #fab387;
+}
+
+[data-accent='yellow'] {
+    --primary: #df8e1d;
+    --primary-hover: #c77d12;
+    --primary-ink: #11111b;
+    --ring: #df8e1d;
+}
+
+.dark[data-accent='yellow'] {
+    --primary: #f9e2af;
+    --primary-hover: #f2d48f;
+    --primary-ink: #11111b;
+    --ring: #f9e2af;
+}
+
+[data-accent='green'] {
+    --primary: #40a02b;
+    --primary-hover: #358524;
+    --primary-ink: #11111b;
+    --ring: #40a02b;
+}
+
+.dark[data-accent='green'] {
+    --primary: #a6e3a1;
+    --primary-hover: #90d18a;
+    --primary-ink: #11111b;
+    --ring: #a6e3a1;
+}
+
+[data-accent='teal'] {
+    --primary: #179299;
+    --primary-hover: #127b81;
+    --primary-ink: #11111b;
+    --ring: #179299;
+}
+
+.dark[data-accent='teal'] {
+    --primary: #94e2d5;
+    --primary-hover: #74d4c4;
+    --primary-ink: #11111b;
+    --ring: #94e2d5;
+}
+
+[data-accent='sky'] {
+    --primary: #04a5e5;
+    --primary-hover: #0390c7;
+    --primary-ink: #11111b;
+    --ring: #04a5e5;
+}
+
+.dark[data-accent='sky'] {
+    --primary: #89dceb;
+    --primary-hover: #69cddf;
+    --primary-ink: #11111b;
+    --ring: #89dceb;
+}
+
+[data-accent='sapphire'] {
+    --primary: #209fb5;
+    --primary-hover: #1c8a9d;
+    --primary-ink: #11111b;
+    --ring: #209fb5;
+}
+
+.dark[data-accent='sapphire'] {
+    --primary: #74c7ec;
+    --primary-hover: #55b6e2;
+    --primary-ink: #11111b;
+    --ring: #74c7ec;
+}
+
+[data-accent='blue'] {
+    --primary: #1e66f5;
+    --primary-hover: #1857d6;
+    --primary-ink: #eff1f5;
+    --ring: #1e66f5;
+}
+
+.dark[data-accent='blue'] {
+    --primary: #89b4fa;
+    --primary-hover: #6d9ff0;
+    --primary-ink: #11111b;
+    --ring: #89b4fa;
+}
+
+[data-accent='lavender'] {
+    --primary: #7287fd;
+    --primary-hover: #5f73e8;
+    --primary-ink: #11111b;
+    --ring: #7287fd;
+}
+
+.dark[data-accent='lavender'] {
+    --primary: #b4befe;
+    --primary-hover: #9aa8fa;
+    --primary-ink: #11111b;
+    --ring: #b4befe;
 }
 
 :root {
@@ -63,5 +293,14 @@
 @layer base {
     body {
         @apply bg-background font-sans text-ink antialiased;
+    }
+
+    button:not(:disabled),
+    [role='button']:not([aria-disabled='true']) {
+        cursor: pointer;
+    }
+
+    button:disabled {
+        @apply cursor-not-allowed;
     }
 }

@@ -10,6 +10,19 @@ uses(RefreshDatabase::class);
 
 test('guests are redirected to login from protected pages', function () {
     $this->get('/')->assertRedirect(route('login'));
+    $this->get('/income')->assertRedirect(route('login'));
+    $this->get('/expense')->assertRedirect(route('login'));
+    $this->get('/categories')->assertRedirect(route('login'));
+    $this->get('/recap')->assertRedirect(route('login'));
+    $this->get('/settings')->assertRedirect(route('login'));
+});
+
+test('authenticated users can open every sidebar page', function () {
+    $account = Account::factory()->create();
+
+    foreach (['/', '/income', '/expense', '/categories', '/recap', '/settings'] as $path) {
+        $this->actingAs($account)->get($path)->assertOk();
+    }
 });
 
 test('guests can reach the login and register pages', function () {
