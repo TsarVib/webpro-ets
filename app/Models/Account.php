@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Database\Factories\AccountFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +11,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 #[Hidden(['password_hash'])]
 class Account extends Authenticatable
 {
-    /** @use HasFactory<AccountFactory> */
     use HasFactory;
 
     protected $table = 'accounts';
