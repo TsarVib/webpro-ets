@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RecapController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
@@ -20,7 +21,10 @@ Route::get('/categories', [CategoryController::class, 'index'])->name('categorie
 Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store')->middleware('auth');
 Route::patch('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update')->middleware('auth');
 Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy')->middleware('auth');
-Route::get('/recap', fn () => Inertia::render('Recap'))->name('recap')->middleware('auth');
+Route::get('/recap', RecapController::class)->name('recap')->middleware('auth');
+Route::get('/recap/csv', [RecapController::class, 'csv'])->name('recap.csv')->middleware('auth');
+Route::get('/recap/report', [RecapController::class, 'html'])->name('recap.report')->middleware('auth');
+Route::get('/recap/pdf', [RecapController::class, 'pdf'])->name('recap.pdf')->middleware('auth');
 Route::get('/settings', fn () => Inertia::render('Settings'))->name('settings')->middleware('auth');
 Route::patch('/settings', [SettingsController::class, 'update'])->name('settings.update')->middleware('auth');
 Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password')->middleware('auth');

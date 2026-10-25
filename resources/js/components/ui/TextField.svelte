@@ -12,18 +12,20 @@
         autocomplete,
         required = false,
         min,
+        max,
         step,
         class: className,
     }: {
         label: string;
         name: string;
         value?: string;
-        type?: "text" | "email" | "password" | "number" | "date" | "time";
+        type?: "text" | "email" | "password" | "number" | "date" | "time" | "month";
         error?: string;
         placeholder?: string;
         autocomplete?: FullAutoFill;
         required?: boolean;
         min?: string | number;
+        max?: string | number;
         step?: string | number;
         class?: string;
     } = $props();
@@ -53,6 +55,7 @@
             {autocomplete}
             required={required}
             {min}
+            {max}
             {step}
             aria-invalid={error ? "true" : undefined}
             aria-describedby={error ? errorId : undefined}
