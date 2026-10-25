@@ -1,14 +1,25 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', fn () => Inertia::render('Home'))->name('home')->middleware('auth');
-Route::get('/income', fn () => Inertia::render('Income'))->name('income')->middleware('auth');
-Route::get('/expense', fn () => Inertia::render('Expense'))->name('expense')->middleware('auth');
-Route::get('/categories', fn () => Inertia::render('Categories'))->name('categories')->middleware('auth');
+Route::get('/', DashboardController::class)->name('home')->middleware('auth');
+Route::get('/income', [TransactionController::class, 'income'])->name('income')->middleware('auth');
+Route::get('/expense', [TransactionController::class, 'expense'])->name('expense')->middleware('auth');
+Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store')->middleware('auth');
+Route::get('/income/export', [TransactionController::class, 'exportIncome'])->name('income.export')->middleware('auth');
+Route::get('/expense/export', [TransactionController::class, 'exportExpense'])->name('expense.export')->middleware('auth');
+Route::patch('/transactions/{transaction}', [TransactionController::class, 'update'])->name('transactions.update')->middleware('auth');
+Route::delete('/transactions/{transaction}', [TransactionController::class, 'destroy'])->name('transactions.destroy')->middleware('auth');
+Route::get('/categories', [CategoryController::class, 'index'])->name('categories')->middleware('auth');
+Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store')->middleware('auth');
+Route::patch('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update')->middleware('auth');
+Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy')->middleware('auth');
 Route::get('/recap', fn () => Inertia::render('Recap'))->name('recap')->middleware('auth');
 Route::get('/settings', fn () => Inertia::render('Settings'))->name('settings')->middleware('auth');
 Route::patch('/settings', [SettingsController::class, 'update'])->name('settings.update')->middleware('auth');

@@ -8,6 +8,7 @@
         loading = false,
         disabled = false,
         class: className,
+        onclick,
         children,
     }: {
         type?: "button" | "submit";
@@ -15,12 +16,14 @@
         loading?: boolean;
         disabled?: boolean;
         class?: string;
+        onclick?: (event: MouseEvent) => void;
         children: Snippet;
     } = $props();
 </script>
 
                 <button
     {type}
+    {onclick}
     aria-busy={loading || undefined}
     disabled={disabled || loading}
     class={cn(

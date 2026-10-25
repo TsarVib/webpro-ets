@@ -39,6 +39,7 @@ export default defineConfig({
                 '**/.claude/**',
                 '**/.cursor/**',
                 '**/.junie/**',
+                '**/database/**',
                 '**/vendor/**',
             ],
         },

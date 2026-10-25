@@ -1,4 +1,5 @@
 <script lang="ts">
+    import type { FullAutoFill } from "svelte/elements";
     import { cn } from "@/lib/utils";
 
     let {
@@ -10,25 +11,29 @@
         placeholder,
         autocomplete,
         required = false,
+        min,
+        step,
         class: className,
     }: {
         label: string;
         name: string;
         value?: string;
-        type?: "text" | "email" | "password";
+        type?: "text" | "email" | "password" | "number" | "date" | "time";
         error?: string;
         placeholder?: string;
-        autocomplete?: string;
+        autocomplete?: FullAutoFill;
         required?: boolean;
+        min?: string | number;
+        step?: string | number;
         class?: string;
     } = $props();
+
+    let typeOverride: "text" | null = $state(null);
 
     const inputId = $derived(`field-${name}`);
     const errorId = $derived(`${inputId}-error`);
     const isPassword = $derived(type === "password");
     const revealed = $derived(isPassword && typeOverride === "text");
-
-    let typeOverride: "text" | null = $state(null);
 </script>
 
 <div class={cn("grid gap-1.5", className)}>
@@ -47,6 +52,8 @@
             {placeholder}
             {autocomplete}
             required={required}
+            {min}
+            {step}
             aria-invalid={error ? "true" : undefined}
             aria-describedby={error ? errorId : undefined}
             class={cn(
