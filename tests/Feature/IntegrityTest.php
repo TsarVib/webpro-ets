@@ -299,3 +299,10 @@ test('the category list shows how many transactions each category has', function
             ->where('categories', fn ($categories) => collect($categories)->pluck('transactions_count', 'name')->all()
                 === ['Food' => 3, 'Unused' => 0]));
 });
+
+test('the database keeps usernames and emails unique', function (string $column) {
+    $account = Account::factory()->create();
+
+    expect(fn () => Account::factory()->create([$column => $account->{$column}]))
+        ->toThrow(QueryException::class);
+})->with(['username', 'email']);

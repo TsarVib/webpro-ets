@@ -59,7 +59,7 @@ Income is always shown in green with a `+` sign and expense in red with a `−` 
 
 The conceptual and physical data models are in [`docs/`](docs):
 
-- Conceptual data model: [`docs/CDM.jpeg`](docs/CDM.jpeg)
+- Conceptual data model: [`docs/CDM.png`](docs/CDM.png)
 - Physical data model: [`docs/PDM.jpeg`](docs/PDM.jpeg)
 - Generated DDL: [`docs/SpendingTracker_PDM_create.sql`](docs/SpendingTracker_PDM_create.sql)
 
@@ -74,6 +74,7 @@ Integrity rules are enforced in the database itself, not only in the app:
 
 - **Foreign keys:** `categories.accounts_id → accounts.id` and `transactions.accounts_id → accounts.id`, both `ON DELETE CASCADE`. There is also a composite `transactions (categories_id, accounts_id) → categories (id, accounts_id)`, so a transaction can only use a category owned by the same account.
 - **Checks:** `amount > 0`, `type IN ('income', 'expense')`, valid dates and times, and non-blank names.
+- **Unique logins:** `accounts.username` and `accounts.email` each have a unique index.
 - **Unique active category** per account, name and type (a partial index on `deleted_at IS NULL`).
 - **Triggers:** a new account gets the default categories, and `transactions.updated_at` is maintained automatically.
 

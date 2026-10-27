@@ -15,6 +15,14 @@ CREATE TABLE accounts (
     updated_at text NOT NULL DEFAULT (datetime('now'))
 );
 
+CREATE UNIQUE INDEX ux_akun_username
+ON accounts (username ASC)
+;
+
+CREATE UNIQUE INDEX ux_akun_email
+ON accounts (email ASC)
+;
+
 -- Table: categories
 CREATE TABLE categories (
     id integer NOT NULL CONSTRAINT categories_pk PRIMARY KEY AUTOINCREMENT,
