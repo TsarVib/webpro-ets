@@ -1,5 +1,5 @@
 -- Created by Redgate Data Modeler (https://datamodeler.redgate-platform.com)
--- Last modification date: 2026-10-22 15:25:07.145
+-- Last modification date: 2026-10-27 15:05:25.67
 
 -- tables
 -- Table: accounts
@@ -81,7 +81,7 @@ CREATE TRIGGER trg_transactions_updated_at AFTER UPDATE ON transactions
 WHEN NEW.updated_at = OLD.updated_at
 BEGIN
     UPDATE transactions SET updated_at = datetime('now') WHERE id = NEW.id;
-END;
+END;;
 
 -- End of file.
 
