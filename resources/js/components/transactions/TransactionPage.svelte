@@ -317,8 +317,8 @@
                                     </td>
                                     <td
                                         class="px-4 py-3 text-right font-medium whitespace-nowrap"
-                                        class:text-primary={isIncome}
-                                        class:text-error={!isIncome}
+                                        class:text-income={isIncome}
+                                        class:text-expense={!isIncome}
                                     >
                                         {isIncome ? "+" : "-"}
                                         {money.format(transaction.amount)}

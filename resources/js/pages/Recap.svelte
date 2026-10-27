@@ -37,11 +37,15 @@
     let reportMode = $state<"month" | "range" | "year">(page.props.mode);
     let chartMode = $state<"bar" | "wheel">("bar");
     const chartGroups = $derived([
-        { title: "Income by category", items: categoryTotals.income },
-        { title: "Expense by category", items: categoryTotals.expense },
+        { title: "Income by category", items: categoryTotals.income, color: "--income", text: "text-income", sign: "+" },
+        { title: "Expense by category", items: categoryTotals.expense, color: "--expense", text: "text-expense", sign: "-" },
     ]);
+    // One scale for both bar charts so income and expense bars are comparable.
+    const chartMax = $derived(
+        Math.max(0, ...categoryTotals.income.map((item) => item.total), ...categoryTotals.expense.map((item) => item.total)),
+    );
+    // Green and red are reserved for income and expense, so the wheel avoids them.
     const chartColors = [
-        "--swatch-green",
         "--swatch-blue",
         "--swatch-peach",
         "--swatch-mauve",
@@ -90,10 +94,8 @@
         });
     }
 
-    function barHeight(items: CategoryTotal[], total: number) {
-        const maximum = Math.max(...items.map((item) => item.total), 0);
-
-        return maximum > 0 ? Math.max((total / maximum) * 100, 4) : 0;
+    function barHeight(total: number) {
+        return chartMax > 0 ? Math.max((total / chartMax) * 100, 2) : 0;
     }
 
     function wheelStyle(items: CategoryTotal[]) {
@@ -154,26 +156,26 @@
         </div>
 
         <div class="grid gap-3 sm:grid-cols-[repeat(3,minmax(0,1fr))_auto]">
-            <section class="grid gap-1 rounded-xl border border-border bg-surface p-4">
+            <section class="grid gap-1 rounded-xl border border-l-4 border-border border-l-income bg-surface p-4">
                 <p class="text-xs text-muted">Income</p>
-                <p class="text-lg font-semibold text-primary">
-                    {money.format(summary.income)}
+                <p class="text-lg font-semibold text-income">
+                    +{money.format(summary.income)}
                 </p>
             </section>
-            <section class="grid gap-1 rounded-xl border border-border bg-surface p-4">
+            <section class="grid gap-1 rounded-xl border border-l-4 border-border border-l-expense bg-surface p-4">
                 <p class="text-xs text-muted">Expense</p>
-                <p class="text-lg font-semibold text-error">
-                    {money.format(summary.expense)}
+                <p class="text-lg font-semibold text-expense">
+                    -{money.format(summary.expense)}
                 </p>
             </section>
             <section class="grid gap-1 rounded-xl border border-border bg-surface p-4">
                 <p class="text-xs text-muted">Net change</p>
                 <p
                     class="text-lg font-semibold"
-                    class:text-primary={summary.net >= 0}
-                    class:text-error={summary.net < 0}
+                    class:text-income={summary.net >= 0}
+                    class:text-expense={summary.net < 0}
                 >
-                    {money.format(summary.net)}
+                    {summary.net > 0 ? "+" : ""}{money.format(summary.net)}
                 </p>
             </section>
             <section class="flex w-fit flex-wrap items-center gap-2 rounded-xl border border-border bg-surface px-3 py-2">
@@ -239,20 +241,23 @@
                     <div class="grid h-64 gap-5 sm:grid-cols-2" aria-label="Category bar charts">
                         {#each chartGroups as group}
                             <div class="grid content-start gap-2">
-                                <h3 class="text-sm font-medium text-ink">{group.title}</h3>
+                                <h3 class="flex items-center gap-2 text-sm font-medium text-ink">
+                                    <span class="size-2.5 rounded-full" style={`background: var(${group.color})`} aria-hidden="true"></span>
+                                    {group.title}
+                                </h3>
                                 {#if group.items.length === 0}
                                     <p class="text-sm text-muted">No categories recorded.</p>
                                 {:else}
                                     <div class="flex min-h-48 items-end gap-3 overflow-x-auto px-2 pt-4">
-                                        {#each group.items as item, index (item.category)}
+                                        {#each group.items as item (item.category)}
                                             <div class="grid min-w-20 flex-1 justify-items-center gap-2">
-                                                <span class="text-center text-xs font-medium text-muted">
-                                                    {money.format(item.total)}
+                                                <span class={`text-center text-xs font-medium ${group.text}`}>
+                                                    {group.sign}{money.format(item.total)}
                                                 </span>
                                                 <div class="flex h-32 w-full items-end rounded-t-lg bg-background">
                                                     <div
                                                         class="w-full rounded-t-lg"
-                                                        style={`height: ${barHeight(group.items, item.total)}%; background: var(${chartColors[index % chartColors.length]})`}
+                                                        style={`height: ${barHeight(item.total)}%; background: var(${group.color})`}
                                                         aria-hidden="true"
                                                     ></div>
                                                 </div>
@@ -271,21 +276,25 @@
                         {#each chartGroups as group}
                             {@const groupTotal = group.items.reduce((sum, item) => sum + item.total, 0)}
                             <div class="grid content-start gap-2">
-                                <h3 class="text-sm font-medium text-ink">{group.title}</h3>
+                                <h3 class="flex items-center gap-2 text-sm font-medium text-ink">
+                                    <span class="size-2.5 rounded-full" style={`background: var(${group.color})`} aria-hidden="true"></span>
+                                    {group.title}
+                                    <span class="text-xs font-normal text-muted">(share of total)</span>
+                                </h3>
                                 {#if group.items.length === 0}
                                     <p class="text-sm text-muted">No categories recorded.</p>
                                 {:else}
                                     <div class="flex flex-wrap items-center justify-center gap-5">
                                         <div
-                                            class="grid size-40 place-items-center rounded-full"
+                                            class="grid size-48 shrink-0 place-items-center rounded-full"
                                             style={wheelStyle(group.items)}
                                             role="img"
                                             aria-label={`${group.title}: ${money.format(groupTotal)}`}
                                         >
-                                            <div class="grid size-24 place-items-center rounded-full bg-surface text-center">
+                                            <div class="grid size-36 place-content-center rounded-full bg-surface text-center">
                                                 <span class="text-xs text-muted">Total</span>
-                                                <span class="text-sm font-semibold text-ink">
-                                                    {money.format(groupTotal)}
+                                                <span class={`text-sm font-semibold whitespace-nowrap ${group.text}`}>
+                                                    {group.sign}{money.format(groupTotal)}
                                                 </span>
                                             </div>
                                         </div>
@@ -315,11 +324,11 @@
 
             <div class="grid min-h-0 flex-1 gap-6 sm:grid-cols-2">
                 {#each [
-                    { title: "Income by category", items: categoryTotals.income, color: "text-primary" },
-                    { title: "Expense by category", items: categoryTotals.expense, color: "text-error" },
+                    { title: "Income by category", items: categoryTotals.income, color: "text-income", border: "border-t-income", sign: "+" },
+                    { title: "Expense by category", items: categoryTotals.expense, color: "text-expense", border: "border-t-expense", sign: "-" },
                 ] as group}
-                    <section class="flex min-h-0 flex-col gap-3 overflow-hidden rounded-xl border border-border bg-surface p-5">
-                        <h2 class="text-sm font-medium text-ink">{group.title}</h2>
+                    <section class={`flex min-h-0 flex-col gap-3 overflow-hidden rounded-xl border border-t-4 border-border bg-surface p-5 ${group.border}`}>
+                        <h2 class={`text-sm font-semibold ${group.color}`}>{group.title}</h2>
                         {#if group.items.length === 0}
                             <p class="text-sm text-muted">No {group.title.toLowerCase()} recorded.</p>
                         {:else}
@@ -330,7 +339,7 @@
                                             {item.category}
                                         </span>
                                         <span class={`shrink-0 text-sm font-medium ${group.color}`}>
-                                            {money.format(item.total)}
+                                            {group.sign}{money.format(item.total)}
                                         </span>
                                     </li>
                                 {/each}

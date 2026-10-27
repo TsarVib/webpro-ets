@@ -17,6 +17,8 @@
     --accent: #fe640b;
     --ring: #40a02b;
     --error: #d20f39;
+    --income: #40a02b;
+    --expense: #d20f39;
 }
 
 .dark {
@@ -31,6 +33,8 @@
     --accent: #fab387;
     --ring: #a6e3a1;
     --error: #f38ba8;
+    --income: #a6e3a1;
+    --expense: #f38ba8;
 }
 
 :root {
@@ -283,6 +287,8 @@
     --color-accent: var(--accent);
     --color-ring: var(--ring);
     --color-error: var(--error);
+    --color-income: var(--income);
+    --color-expense: var(--expense);
 
     --font-sans:
         Instrument Sans, ui-sans-serif, system-ui, sans-serif,

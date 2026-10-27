@@ -140,8 +140,8 @@
             <div class="grid gap-4 rounded-xl border border-border bg-surface p-5">
                 <div class="grid gap-1">
                     <p class="text-sm text-muted">Income</p>
-                    <p class="text-xl font-semibold text-primary">
-                        {money.format(summary.month_income)}
+                    <p class="text-xl font-semibold text-income">
+                        +{money.format(summary.month_income)}
                     </p>
                 </div>
                 <p class="text-xs text-muted">{summary.month_label}</p>
@@ -149,8 +149,8 @@
             <div class="grid gap-4 rounded-xl border border-border bg-surface p-5">
                 <div class="grid gap-1">
                     <p class="text-sm text-muted">Expenses</p>
-                    <p class="text-xl font-semibold text-error">
-                        {money.format(summary.month_expense)}
+                    <p class="text-xl font-semibold text-expense">
+                        -{money.format(summary.month_expense)}
                     </p>
                 </div>
                 <p class="text-xs text-muted">{summary.month_label}</p>
@@ -258,8 +258,8 @@
                                 </span>
                             </div>
                             <span
-                                class:text-primary={transaction.type === "income"}
-                                class:text-error={transaction.type === "expense"}
+                                class:text-income={transaction.type === "income"}
+                                class:text-expense={transaction.type === "expense"}
                                 class="shrink-0 text-sm font-medium"
                             >
                                 {transaction.type === "income" ? "+" : "-"}

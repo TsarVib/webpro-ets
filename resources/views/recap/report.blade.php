@@ -10,8 +10,12 @@
         .muted { color: #5c5f77; }
         .summary { display: table; margin: 18px 0; width: 100%; }
         .summary div { display: table-cell; padding: 10px; width: 33%; }
-        .income { color: #358524; }
+        .income { color: #2b7a1e; }
         .expense { color: #b00c30; }
+        .summary .income-box { border-left: 4px solid #2b7a1e; }
+        .summary .expense-box { border-left: 4px solid #b00c30; }
+        h2.income { border-bottom-color: #2b7a1e; }
+        h2.expense { border-bottom-color: #b00c30; }
         table { border-collapse: collapse; width: 100%; }
         th, td { border-bottom: 1px solid #d5d8e0; padding: 7px; text-align: left; }
         th:last-child, td:last-child { text-align: right; }
@@ -24,20 +28,20 @@
     <p class="muted">{{ $period_label }}</p>
 
     <div class="summary">
-        <div><strong>Income</strong><br><span class="income">Rp {{ number_format($summary['income'], 0, ',', '.') }}</span></div>
-        <div><strong>Expense</strong><br><span class="expense">Rp {{ number_format($summary['expense'], 0, ',', '.') }}</span></div>
-        <div><strong>Net change</strong><br>Rp {{ number_format($summary['net'], 0, ',', '.') }}</div>
+        <div class="income-box"><strong>Income</strong><br><span class="income">+Rp {{ number_format($summary['income'], 0, ',', '.') }}</span></div>
+        <div class="expense-box"><strong>Expense</strong><br><span class="expense">-Rp {{ number_format($summary['expense'], 0, ',', '.') }}</span></div>
+        <div><strong>Net change</strong><br><span class="{{ $summary['net'] < 0 ? 'expense' : 'income' }}">{{ $summary['net'] < 0 ? '-' : '+' }}Rp {{ number_format(abs($summary['net']), 0, ',', '.') }}</span></div>
     </div>
 
     <div class="category-grid">
         @foreach (['income' => 'Income by category', 'expense' => 'Expense by category'] as $type => $title)
             <div class="category-list">
-                <h2>{{ $title }}</h2>
+                <h2 class="{{ $type }}">{{ $title }}</h2>
                 <table>
                     @foreach ($category_totals[$type] as $item)
                         <tr>
                             <td>{{ $item['category'] }}</td>
-                            <td>Rp {{ number_format($item['total'], 0, ',', '.') }}</td>
+                            <td class="{{ $type }}">{{ $type === 'income' ? '+' : '-' }}Rp {{ number_format($item['total'], 0, ',', '.') }}</td>
                         </tr>
                     @endforeach
                 </table>
@@ -55,9 +59,9 @@
                 <tr>
                     <td>{{ $transaction['date'] }}</td>
                     <td>{{ $transaction['time'] ?? '-' }}</td>
-                    <td>{{ ucfirst($transaction['type']) }}</td>
+                    <td class="{{ $transaction['type'] }}">{{ ucfirst($transaction['type']) }}</td>
                     <td>{{ $transaction['category'] }}</td>
-                    <td>Rp {{ number_format($transaction['amount'], 0, ',', '.') }}</td>
+                    <td class="{{ $transaction['type'] }}">{{ $transaction['type'] === 'income' ? '+' : '-' }}Rp {{ number_format($transaction['amount'], 0, ',', '.') }}</td>
                     <td>{{ $transaction['notes'] ?? '-' }}</td>
                 </tr>
             @endforeach

@@ -40,6 +40,12 @@ class CategoryController extends Controller
         $this->ensureOwned($category, $account);
         $data = $this->validated($request, $account, $category);
 
+        if ($data['type'] !== $category->type && $category->transactions()->exists()) {
+            return back()->withErrors([
+                'type' => 'This category cannot change type while it has transactions.',
+            ]);
+        }
+
         $category->update($data);
 
         return back();
