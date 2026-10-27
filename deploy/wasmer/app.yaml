@@ -8,7 +8,8 @@ env:
     APP_DEBUG: 'false'
     LOG_CHANNEL: stderr
     DB_CONNECTION: sqlite
-    DB_DATABASE: /data/database.sqlite
+    DB_DATABASE: /data/app.sqlite
+    DB_BUSY_TIMEOUT: '5000'
     LARAVEL_STORAGE_PATH: /data/storage
     SESSION_DRIVER: database
     CACHE_STORE: database
@@ -17,5 +18,10 @@ env:
 volumes:
     - name: data
       mount: /data
-scaling:
-    mode: single_concurrency
+# The data volume lives in one region; keep every instance next to it.
+locality:
+    regions:
+        - fr-roub1
+# No scaling.mode: single_concurrency. It starts many instances at once, and parallel writers corrupted SQLite on the
+# shared volume. The default keeps one instance, which load tests showed serves SQLite safely.
+app_id: da_KGzIxtmUPVkW

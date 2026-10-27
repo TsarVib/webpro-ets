@@ -4,7 +4,7 @@ A personal finance web app for recording income and expenses, organising them in
 
 Built for the **EF234301 Web Programming (D) midterm** (2026/2027-1): a CRUD website in Laravel with at least eight features beyond authentication and a database schema with foreign keys.
 
-**Live demo:** _to be added after deployment_
+**Live demo:** <https://webpro-ets.wasmer.app/> (hosted free on Wasmer Edge; the first visit after idle can take a few seconds)
 
 **Demo login:** username `demo` (or `demo@example.com`), password `demo1234`. It comes with three months of sample income and expenses. This is a shared public account, so don't enter anything private.
 
@@ -90,6 +90,20 @@ composer dev     # start the app
 ```
 
 Open http://localhost:8000, register an account and log in. New accounts start with the default income and expense categories.
+
+## Deployment
+
+The live site runs on [Wasmer Edge](https://wasmer.io) (free plan), with SQLite on a persistent volume. Config lives in [`deploy/wasmer/`](deploy/wasmer).
+
+```bash
+deploy/wasmer/build.sh                        # project files, production vendor, built assets, config -> .wasmer-build/
+cd .wasmer-build && wasmer deploy --non-interactive
+```
+
+- `APP_KEY` is stored as a Wasmer secret (`wasmer app secret create APP_KEY <value>`), never in the repo.
+- Migrations and seeders run automatically on the first request after a schema change.
+- Wasmer's PHP runtime is 8.3, so composer is pinned to PHP 8.3 (Symfony 7.4 LTS).
+- Keep the default scaling. `single_concurrency` starts many instances at once, and their parallel writes corrupted the SQLite file.
 
 ## Testing
 

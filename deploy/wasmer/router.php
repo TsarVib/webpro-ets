@@ -19,12 +19,14 @@ if ($storage !== null && ! is_dir($storage.'/framework/views')) {
     }
 }
 
-// Migrate and seed once per schema version (build.sh stamps the migration list); both seeders are idempotent.
+// Migrate and seed once per schema version (build.sh stamps the migration list) or when the database file is new;
+// both seeders are idempotent.
 $stamp = trim((string) @file_get_contents(__DIR__.'/migrations.stamp'));
 $marker = $storage !== null && $stamp !== '' ? $storage.'/migrated-'.$stamp : null;
 
-if ($marker !== null && ! is_file($marker)) {
-    $database = $_ENV['DB_DATABASE'] ?? null;
+$database = $_ENV['DB_DATABASE'] ?? null;
+
+if ($marker !== null && (! is_file($marker) || ($database !== null && ! is_file($database)))) {
 
     if ($database !== null && ! is_file($database)) {
         touch($database);
