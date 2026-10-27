@@ -6,6 +6,8 @@ Built for the **EF234301 Web Programming (D) midterm** (2026/2027-1): a CRUD web
 
 **Live demo:** _to be added after deployment_
 
+**Demo login:** username `demo` (or `demo@example.com`), password `demo1234`. It comes with three months of sample income and expenses. This is a shared public account, so don't enter anything private.
+
 ## Team
 
 | NRP        | Name                             |
@@ -82,7 +84,7 @@ Requirements: PHP 8.3+ with the `pdo_sqlite`, `mbstring`, `xml`, `dom` and `gd` 
 ```bash
 git clone https://github.com/TsarVib/webpro-ets.git
 cd webpro-ets
-composer setup   # install dependencies, create .env, generate key, migrate + seed default categories, build assets
+composer setup   # install dependencies, create .env, generate key, migrate + seed (default categories, demo account), build assets
 composer dev     # start the app
 ```
 

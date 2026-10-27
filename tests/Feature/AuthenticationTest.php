@@ -130,3 +130,18 @@ test('pages behind an https proxy link assets over https', function () {
     expect($html)->toMatch('#https://[^"]+/build/#')
         ->not->toMatch('#http://[^"]+/build/#');
 });
+
+test('the seeded demo account can log in and is seeded only once', function () {
+    $this->seed();
+    $this->seed();
+
+    $demo = Account::where('username', 'demo')->sole();
+
+    expect($demo->transactions()->count())->toBe(18)
+        ->and($demo->categories()->count())->toBe(13)
+        ->and($demo->transactions()->where('date', '>', now()->toDateString())->exists())->toBeFalse();
+
+    $this->post('/login', ['login' => 'demo', 'password' => 'demo1234'])
+        ->assertRedirect(route('home'));
+    $this->assertAuthenticatedAs($demo);
+});
