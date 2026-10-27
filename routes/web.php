@@ -32,7 +32,7 @@ Route::put('/settings/password', [SettingsController::class, 'updatePassword'])-
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', fn () => Inertia::render('Login'))->name('login');
     Route::get('/register', fn () => Inertia::render('Register'))->name('register');
-    Route::post('/login', [AuthController::class, 'store'])->name('login.authenticate');
+    Route::post('/login', [AuthController::class, 'store'])->name('login.authenticate')->middleware('throttle:5,1');
     Route::post('/register', [AuthController::class, 'create'])->name('register.create');
 });
 

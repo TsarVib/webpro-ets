@@ -110,3 +110,23 @@ test('logout destroys the session', function () {
     $this->actingAs(Account::factory()->create())->post('/logout')->assertRedirect(route('login'));
     $this->assertGuest();
 });
+
+test('login is rate limited after five attempts', function () {
+    Account::factory()->create(['username' => 'tsar']);
+
+    foreach (range(1, 5) as $attempt) {
+        $this->post('/login', ['login' => 'tsar', 'password' => 'wrong'])
+            ->assertSessionHasErrors('login');
+    }
+
+    $this->post('/login', ['login' => 'tsar', 'password' => 'password'])
+        ->assertTooManyRequests();
+    $this->assertGuest();
+});
+
+test('pages behind an https proxy link assets over https', function () {
+    $html = $this->get('/login', ['X-Forwarded-Proto' => 'https'])->assertOk()->getContent();
+
+    expect($html)->toMatch('#https://[^"]+/build/#')
+        ->not->toMatch('#http://[^"]+/build/#');
+});
