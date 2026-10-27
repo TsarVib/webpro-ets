@@ -60,7 +60,7 @@ Income is always shown in green with a `+` sign and expense in red with a `−` 
 The conceptual and physical data models are in [`docs/`](docs):
 
 - Conceptual data model: [`docs/CDM.png`](docs/CDM.png)
-- Physical data model: [`docs/PDM.jpeg`](docs/PDM.jpeg)
+- Physical data model: [`docs/PDM.png`](docs/PDM.png)
 - Generated DDL: [`docs/SpendingTracker_PDM_create.sql`](docs/SpendingTracker_PDM_create.sql)
 
 | Table                | Purpose                                                                       |
