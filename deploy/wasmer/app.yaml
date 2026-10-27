@@ -1,0 +1,21 @@
+kind: wasmer.io/App.v0
+name: webpro-ets
+owner: wistarabanyukayana
+package: .
+env:
+    APP_NAME: Spending Tracker
+    APP_ENV: production
+    APP_DEBUG: 'false'
+    LOG_CHANNEL: stderr
+    DB_CONNECTION: sqlite
+    DB_DATABASE: /data/database.sqlite
+    LARAVEL_STORAGE_PATH: /data/storage
+    SESSION_DRIVER: database
+    CACHE_STORE: database
+    QUEUE_CONNECTION: sync
+# APP_KEY is a Wasmer secret: wasmer app secrets create APP_KEY <value>
+volumes:
+    - name: data
+      mount: /data
+scaling:
+    mode: single_concurrency
