@@ -18,12 +18,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $accounts_id
  * @property int $categories_id
  * @property Category|null $category
- *
- * @use HasFactory<TransactionFactory>
  */
 #[Fillable(['type', 'amount', 'notes', 'date', 'time', 'accounts_id', 'categories_id'])]
 class Transaction extends Model
 {
+    /** @use HasFactory<TransactionFactory> */
     use HasFactory;
 
     protected $table = 'transactions';

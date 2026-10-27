@@ -83,6 +83,9 @@ class CategoryController extends Controller
         abort_unless($category->accounts_id === $account->id, 404);
     }
 
+    /**
+     * @return array{name: string, type: string}
+     */
     private function validated(Request $request, Account $account, ?Category $category = null): array
     {
         return $request->validate([

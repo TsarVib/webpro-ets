@@ -63,6 +63,9 @@ class DashboardController extends Controller
         ]);
     }
 
+    /**
+     * @return array{from?: string, to?: string, category?: int|string, q?: string, type?: string}
+     */
     private function filters(Request $request): array
     {
         $data = $request->validate([
@@ -76,6 +79,10 @@ class DashboardController extends Controller
         return array_filter($data, fn ($value): bool => $value !== null && $value !== '');
     }
 
+    /**
+     * @param  array{from?: string, to?: string, category?: int|string, q?: string, type?: string}  $filters
+     * @return Builder<Transaction>
+     */
     private function filteredQuery(Account $account, array $filters): Builder
     {
         $query = $account->transactions()->getQuery();

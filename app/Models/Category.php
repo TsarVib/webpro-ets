@@ -17,13 +17,13 @@ use Illuminate\Support\Carbon;
  * @property string $type
  * @property int $accounts_id
  * @property Carbon|null $deleted_at
- *
- * @use HasFactory<CategoryFactory>
  */
 #[Fillable(['name', 'type', 'accounts_id'])]
 class Category extends Model
 {
+    /** @use HasFactory<CategoryFactory> */
     use HasFactory;
+
     use SoftDeletes;
 
     public $timestamps = false;

@@ -6,6 +6,20 @@ use Illuminate\Support\Facades\Hash;
 
 uses(RefreshDatabase::class);
 
+test('secrets of the account are never sent to the page', function () {
+    $account = Account::factory()->create(['remember_token' => 'secret-remember-token']);
+
+    $this->actingAs($account)
+        ->get(route('settings'))
+        ->assertOk()
+        ->assertDontSee('secret-remember-token')
+        ->assertDontSee($account->password_hash, false)
+        ->assertInertia(fn ($page) => $page
+            ->where('auth.user.username', $account->username)
+            ->missing('auth.user.remember_token')
+            ->missing('auth.user.password_hash'));
+});
+
 test('a guest cannot update the profile', function () {
     $this->patch('/settings', [
         'username' => 'tsar',

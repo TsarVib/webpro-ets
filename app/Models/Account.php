@@ -16,13 +16,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string $email
  * @property string $password_hash
  * @property int $initial_balance
- *
- * @use HasFactory<\Database\Factories\AccountFactory>
  */
 #[Fillable(['username', 'full_name', 'email', 'password_hash', 'initial_balance'])]
-#[Hidden(['password_hash'])]
+#[Hidden(['password_hash', 'remember_token'])]
 class Account extends Authenticatable
 {
+    /** @use HasFactory<AccountFactory> */
     use HasFactory;
 
     protected $table = 'accounts';

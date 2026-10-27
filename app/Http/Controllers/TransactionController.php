@@ -245,7 +245,7 @@ class TransactionController extends Controller
     }
 
     /**
-     * @return array{type: string, category_id: int, amount: int, notes?: string|null, date: string, time?: string|null}
+     * @return array{type: string, category_id: int, amount: int, notes: string|null, date: string, time: string|null}
      */
     private function validated(Request $request, Account $account): array
     {

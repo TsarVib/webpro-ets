@@ -23,11 +23,13 @@
 
     const editing = $derived(transaction !== null);
     const label = $derived(type === "income" ? "income" : "expense");
-    let dialog: HTMLDivElement;
+    let dialog = $state<HTMLDivElement>();
 
     $effect(() => {
-        if (dialog) {
-            tick().then(() => dialog.querySelector<HTMLElement>("input, select, textarea, button")?.focus());
+        const element = dialog;
+
+        if (element) {
+            tick().then(() => element.querySelector<HTMLElement>("input, select, textarea, button")?.focus());
         }
     });
 

@@ -8,6 +8,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -73,6 +74,9 @@ class RecapController extends Controller
             ->download('recap-'.str($report['props']['period_label'])->slug('-').'.pdf');
     }
 
+    /**
+     * @return array{transactions: Collection<int, array{date: string, time: string|null, type: string, category: string, amount: int, notes: string|null}>, props: array<string, mixed>&array{period_label: string}}
+     */
     private function report(Request $request, Account $account): array
     {
         $data = $this->validatedFilters($request);
@@ -91,8 +95,8 @@ class RecapController extends Controller
             ->get()
             ->map(fn (Transaction $transaction): array => [
                 'type' => $transaction->type,
-                'category' => $transaction->category?->name ?? 'Uncategorized',
-                'total' => (int) $transaction->total,
+                'category' => $transaction->category->name ?? 'Uncategorized',
+                'total' => (int) $transaction->getAttribute('total'),
             ]);
         $transactions = $query
             ->with('category:id,name')
@@ -104,7 +108,7 @@ class RecapController extends Controller
                 'date' => $transaction->date,
                 'time' => $transaction->time,
                 'type' => $transaction->type,
-                'category' => $transaction->category?->name ?? 'Uncategorized',
+                'category' => $transaction->category->name ?? 'Uncategorized',
                 'amount' => $transaction->amount,
                 'notes' => $transaction->notes,
             ]);
@@ -132,6 +136,9 @@ class RecapController extends Controller
         ];
     }
 
+    /**
+     * @return array{mode?: string|null, month?: string|null, from?: string|null, to?: string|null, year?: string|null}
+     */
     private function validatedFilters(Request $request): array
     {
         return $request->validate([
@@ -143,6 +150,10 @@ class RecapController extends Controller
         ]);
     }
 
+    /**
+     * @param  array{mode?: string|null, month?: string|null, from?: string|null, to?: string|null, year?: string|null}  $data
+     * @return array{0: string, 1: string, 2: string}
+     */
     private function period(string $mode, array $data): array
     {
         if ($mode === 'year') {
