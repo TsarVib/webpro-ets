@@ -117,3 +117,25 @@ test('password change requires a confirmation', function () {
         'password_confirmation' => 'different',
     ])->assertSessionHasErrors('password');
 });
+
+test('changing the password signs out other sessions but keeps this one', function () {
+    $account = Account::factory()->create();
+    $oldHash = $account->password_hash;
+
+    $this->actingAs($account)
+        ->put(route('settings.password'), [
+            'current_password' => 'password',
+            'password' => 'new-password-123',
+            'password_confirmation' => 'new-password-123',
+        ])
+        ->assertSessionHasNoErrors();
+
+    $this->get(route('home'))->assertOk();
+
+    // Another device: its session still carries the hash from before the change.
+    $this->actingAs($account->fresh())
+        ->withSession(['password_hash_web' => $oldHash])
+        ->get(route('home'))
+        ->assertRedirect(route('login'));
+    $this->assertGuest();
+});

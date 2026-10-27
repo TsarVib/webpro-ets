@@ -18,6 +18,7 @@ class CategoryController extends Controller
 
         return Inertia::render('Categories', [
             'categories' => $account->categories()
+                ->withCount('transactions')
                 ->orderBy('type')
                 ->orderBy('name')
                 ->get(['id', 'name', 'type']),

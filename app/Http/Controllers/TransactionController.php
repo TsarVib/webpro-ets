@@ -142,14 +142,14 @@ class TransactionController extends Controller
 
             $query->chunk(500, function ($transactions) use ($handle): void {
                 foreach ($transactions as $transaction) {
-                    fputcsv($handle, [
+                    fputcsv($handle, $this->csvRow([
                         $transaction->date,
                         $transaction->time,
                         $transaction->type,
                         $transaction->category?->name,
                         $transaction->amount,
                         $transaction->notes,
-                    ]);
+                    ]));
                 }
             });
 
@@ -168,18 +168,6 @@ class TransactionController extends Controller
         }
 
         return $account;
-    }
-
-    public function categories(Request $request): Response
-    {
-        $account = $this->account($request);
-
-        return Inertia::render('Categories', [
-            'categories' => $account->categories()
-                ->orderBy('type')
-                ->orderBy('name')
-                ->get(['id', 'name', 'type']),
-        ]);
     }
 
     /**

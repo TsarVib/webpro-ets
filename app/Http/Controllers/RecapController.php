@@ -41,14 +41,14 @@ class RecapController extends Controller
             fputcsv($handle, ['date', 'time', 'type', 'category', 'amount', 'notes']);
 
             foreach ($report['transactions'] as $transaction) {
-                fputcsv($handle, [
+                fputcsv($handle, $this->csvRow([
                     $transaction['date'],
                     $transaction['time'],
                     $transaction['type'],
                     $transaction['category'],
                     $transaction['amount'],
                     $transaction['notes'],
-                ]);
+                ]));
             }
 
             fclose($handle);

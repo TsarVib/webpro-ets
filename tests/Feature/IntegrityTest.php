@@ -266,3 +266,36 @@ test('the recap shows an empty state with no data', function () {
             ->where('summary.expense', 0)
             ->where('summary.net', 0));
 });
+
+test('csv exports neutralise spreadsheet formulas in user text', function () {
+    $account = Account::factory()->create();
+    $category = categoryFor($account, 'expense', '@Food');
+    Transaction::factory()->create([
+        'accounts_id' => $account->id, 'categories_id' => $category->id, 'type' => 'expense',
+        'amount' => 500, 'date' => '2026-10-05', 'time' => '12:00:00', 'notes' => '=HYPERLINK("http://evil")',
+    ]);
+
+    $expected = "2026-10-05,12:00:00,expense,'@Food,500,\"'=HYPERLINK(\"\"http://evil\"\")\"";
+
+    $listCsv = $this->actingAs($account)->get(route('expense.export'))->streamedContent();
+    $recapCsv = $this->actingAs($account)->get(route('recap.csv', ['month' => '2026-10']))->streamedContent();
+
+    expect($listCsv)->toContain($expected)
+        ->and($recapCsv)->toContain($expected);
+});
+
+test('the category list shows how many transactions each category has', function () {
+    $account = Account::factory()->create();
+    $food = categoryFor($account, 'expense', 'Food');
+    $unused = categoryFor($account, 'expense', 'Unused');
+    Transaction::factory()->count(3)->create([
+        'accounts_id' => $account->id, 'categories_id' => $food->id, 'type' => 'expense',
+    ]);
+    Transaction::factory()->create(); // another account's data must not be counted
+
+    $this->actingAs($account)->get(route('categories'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('categories', fn ($categories) => collect($categories)->pluck('transactions_count', 'name')->all()
+                === ['Food' => 3, 'Unused' => 0]));
+});

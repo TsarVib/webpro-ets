@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -36,6 +37,9 @@ class SettingsController extends Controller
         $request->user()->update([
             'password_hash' => Hash::make($data['password']),
         ]);
+
+        // Other sessions and "remember me" cookies hold the old hash, so AuthenticateSession signs them out.
+        Auth::logoutOtherDevices($data['password']);
 
         return back();
     }

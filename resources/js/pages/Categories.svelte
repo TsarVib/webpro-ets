@@ -11,7 +11,11 @@
         id: number;
         name: string;
         type: "income" | "expense";
+        transactions_count: number;
     };
+
+    const entries = (count: number) =>
+        count === 0 ? "No entries" : count === 1 ? "1 entry" : `${count} entries`;
 
     let { categories = [] }: { categories: Category[] } = $props();
 
@@ -112,7 +116,10 @@
                             <ul class="min-h-0 flex-1 overflow-y-auto">
                                 {#each group.items as category (category.id)}
                                     <li class="mb-2 flex items-center justify-between gap-3 rounded-lg border border-border px-3 py-2 last:mb-0">
-                                        <span class="min-w-0 truncate text-sm text-ink">{category.name}</span>
+                                        <span class="grid min-w-0">
+                                            <span class="truncate text-sm text-ink">{category.name}</span>
+                                            <span class="text-xs text-muted">{entries(category.transactions_count)}</span>
+                                        </span>
                                         <span class="flex shrink-0 items-center gap-1">
                                             <button
                                                 type="button"
