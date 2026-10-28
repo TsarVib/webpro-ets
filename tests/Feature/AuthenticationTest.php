@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Account;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -145,3 +146,43 @@ test('the seeded demo account can log in and is seeded only once', function () {
         ->assertRedirect(route('home'));
     $this->assertAuthenticatedAs($demo);
 });
+
+test('usernames and emails are unique regardless of capitalisation', function () {
+    Account::factory()->create(['username' => 'tsar', 'email' => 'tsar@example.com']);
+
+    $this->post(route('register.create'), [
+        'username' => 'TSAR',
+        'full_name' => 'Copy Cat',
+        'email' => 'Tsar@Example.COM',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ])->assertSessionHasErrors(['username', 'email']);
+
+    expect(Account::count())->toBe(1);
+});
+
+test('registration stores the username and email in lowercase and login ignores capitalisation', function () {
+    $this->post(route('register.create'), [
+        'username' => 'NewUser',
+        'full_name' => 'New User',
+        'email' => 'New.User@Example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ])->assertRedirect(route('login'));
+
+    expect(Account::where('username', 'newuser')->where('email', 'new.user@example.com')->exists())->toBeTrue();
+
+    $this->post('/login', ['login' => 'NEWUSER', 'password' => 'password123'])->assertRedirect(route('home'));
+    $this->assertAuthenticated();
+    Auth::logout();
+
+    $this->post('/login', ['login' => 'New.User@EXAMPLE.com', 'password' => 'password123'])->assertRedirect(route('home'));
+    $this->assertAuthenticated();
+});
+
+test('the database rejects usernames and emails that differ only in capitalisation', function (string $column) {
+    $account = Account::factory()->create();
+
+    expect(fn () => Account::factory()->create([$column => strtoupper($account->{$column})]))
+        ->toThrow(QueryException::class);
+})->with(['username', 'email']);

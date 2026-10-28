@@ -13,6 +13,8 @@ class AuthController extends Controller
 {
     public function create(Request $request): RedirectResponse
     {
+        $this->lowercaseIdentity($request);
+
         $data = $request->validate([
             'username' => ['required', 'string', 'min:3', 'max:255', 'unique:accounts,username'],
             'full_name' => ['required', 'string', 'max:255'],
@@ -37,9 +39,10 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $credentials = filter_var($data['login'], FILTER_VALIDATE_EMAIL)
-            ? ['email' => $data['login']]
-            : ['username' => $data['login']];
+        $login = mb_strtolower($data['login']);
+        $credentials = filter_var($login, FILTER_VALIDATE_EMAIL)
+            ? ['email' => $login]
+            : ['username' => $login];
 
         if (Auth::attempt([...$credentials, 'password' => $data['password']], $request->boolean('remember'))) {
             $request->session()->regenerate();

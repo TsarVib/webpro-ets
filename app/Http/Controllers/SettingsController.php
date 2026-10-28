@@ -14,6 +14,7 @@ class SettingsController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $account = $request->user();
+        $this->lowercaseIdentity($request);
 
         $data = $request->validate([
             'username' => ['required', 'string', 'min:3', 'max:255', Rule::unique('accounts', 'username')->ignore($account->id)],

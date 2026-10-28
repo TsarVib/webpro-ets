@@ -139,3 +139,15 @@ test('changing the password signs out other sessions but keeps this one', functi
         ->assertRedirect(route('login'));
     $this->assertGuest();
 });
+
+test('a profile update cannot take another accounts email or username in different capitals', function () {
+    Account::factory()->create(['username' => 'taken', 'email' => 'taken@example.com']);
+    $account = Account::factory()->create();
+
+    $this->actingAs($account)->patch('/settings', [
+        'username' => 'TAKEN',
+        'full_name' => $account->full_name,
+        'email' => 'TAKEN@example.com',
+        'initial_balance' => 0,
+    ])->assertSessionHasErrors(['username', 'email']);
+});

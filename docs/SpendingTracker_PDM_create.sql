@@ -16,11 +16,11 @@ CREATE TABLE accounts (
 );
 
 CREATE UNIQUE INDEX ux_akun_username
-ON accounts (username ASC)
+ON accounts (lower(username))
 ;
 
 CREATE UNIQUE INDEX ux_akun_email
-ON accounts (email ASC)
+ON accounts (lower(email))
 ;
 
 -- Table: categories
